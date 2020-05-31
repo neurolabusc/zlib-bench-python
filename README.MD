@@ -6,7 +6,24 @@ These simple Python scripts benchmark different zlib compression libraries. The 
 
 ![alt tag](https://github.com/neurolabusc/zlib-bench-python/blob/master/silesia_speed_size.png)
 
+To run this script, you would run the following commands:
+
+```
+a_compile.py
+b_speed_test.py
+```
+
+
 The script `a_compile.py` downloads the [silesia corpus](http://sun.aei.polsl.pl/~sdeor/index.php?page=silesia) and compiles the versions of zlib to be tested. By default it will compile zlib-ng using the gcc and clang compilers. This assumes you have both compilers installed and they are named `gcc` and `clang`. You may need to edit this for your system. for example on MacOS `gcc` is actually an alias for `clang`, so you will have to provide an explicit name for gcc (e.g. `gcc-9` and `g++-9` for the c and c++ compilers).
+
+The script `a_compile.py` optionally allows you to test the [CloudFlare variant of zlib](https://github.com/cloudflare/zlib). To enable this you must use a text editor to uncomment the line
+```
+    #compile_cloudflare()
+```
+To read
+```
+    compile_cloudflare()
+```
 
 The script `b_speed_test.py` allows us to compare speed of compression and decompression. 
 
@@ -41,6 +58,8 @@ gzip	26661	26830	26999	190.79
 minigzgcc	18845	19070	19294	269.91
 minigzclang	18274	18689	19105	278.35
 ```
+
+Be warned that this script will use a huge amount of disk space. The Silesia coprpus is large, and for the decomrpression test each compression tool contributes a compressed version of this corpus at each compression level (1..9).
 
 ## Alternatives
 

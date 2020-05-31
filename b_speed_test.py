@@ -83,7 +83,7 @@ def test_cmp(
     meth = ntpath.basename(exe)
     if not silent:
         print('CompressMethod\tLevel\tMin\tMean\tMax\tmb/s\t%')
-    for lvl in range(2, max_level + 1):
+    for lvl in range(1, max_level + 1):
         size = 0
         nsize = 0
         seconds = np.zeros(repeats);
@@ -277,7 +277,7 @@ def compress_all_levels(exe, indir, tmpdir, exts):
     if not os.path.exists(method) and not shutil.which(method):
         print('Skipping test: Unable to find "' + method + '"')
         return 0
-    for lvl in range(2, max_level+1):
+    for lvl in range(1, max_level+1):
         for f in os.listdir(indir):
             if not os.path.isfile(os.path.join(indir, f)):
                 continue
@@ -357,7 +357,7 @@ if __name__ == '__main__':
     if not os.path.isdir(indir):
         print('Run a_compile.py first: Unable to find "' + indir +'"')
         sys.exit()
-    repeats = 2
+    repeats = 5
     if len(sys.argv) > 2:
         repeats = int(sys.argv[2])
     results_file = ntpath.basename(indir)+'_speed_size.pkl'
