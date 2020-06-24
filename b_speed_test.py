@@ -146,7 +146,7 @@ def plot(results_file):
     #    exit()
     df = pd.read_pickle(results_file)
     sns.set()
-    sns_plot = sns.lineplot(x='speed mb/s', y='size %', hue='exe', data=df)
+    sns_plot = sns.lineplot(x='speed mb/s', y='size %', hue='exe', data=df, marker='o')
     #plt.show()
     plt.savefig(results_file.replace('.pkl', '.png'))
 
@@ -364,7 +364,8 @@ if __name__ == '__main__':
     if os.path.exists(results_file):
         os.remove(results_file)
     exes = []
-    #exes.append({'exe': 'zstd', 'uncompress': ' -T0 -q -f -k -d ', 'compress': ' -T0 -q -f -k -', 'max_level': 19, 'ext': '.zst' })
+    #zstd max_level is 19, with highest levels VERY slow.  
+    exes.append({'exe': 'zstd', 'uncompress': ' -T0 -q -f -k -d ', 'compress': ' -T1 -q -f -k -', 'max_level': 19, 'ext': '.zst' })
     #exes.append({'exe': 'pbzip2', 'uncompress': ' -q -f -k -d ', 'compress':  ' -q -f -k -', 'max_level': 9, 'ext': '.bz2' })
     #exes.append({'exe': 'lbzip2', 'uncompress': ' -q -f -k -d ', 'compress':  ' -q -f -k -', 'max_level': 9, 'ext': '.bz2' })
     #exes.append({'exe': 'lz4', 'uncompress': ' -q -f -k -d ', 'compress':  ' -q -f -k -', 'max_level': 9, 'ext': '.lz4' })
@@ -375,7 +376,7 @@ if __name__ == '__main__':
     if not os.path.isdir(exeDir):
         print('Run a_compile.py first: Unable to find "' + exeDir +'"')
     else:
-        for exe in os.listdir(exeDir):
+        for exe in sorted(os.listdir(exeDir)):
             exe = os.path.join(exeDir, exe)
             if os.path.isfile(exe):
                 st = os.stat(exe)
@@ -396,7 +397,7 @@ if __name__ == '__main__':
         1,
         exes[i]['ext'],
         exes[i]['compress'],
-        exes[i]['max_level'],
+        2,
         exts,
         True)
     #test each compression
