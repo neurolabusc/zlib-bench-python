@@ -377,13 +377,18 @@ if __name__ == '__main__':
         print('Run a_compile.py first: Unable to find "' + exeDir +'"')
     else:
         for exe in sorted(os.listdir(exeDir)):
+            #for libdeflate we must -f to "force" overwrites
+            # for minigzip variants -f creates Z_FILTERED
+            force = ''
+            if exe.startswith('libdeflate'):
+                force = ' -f'
             exe = os.path.join(exeDir, exe)
             if os.path.isfile(exe):
                 st = os.stat(exe)
                 mode = st.st_mode
                 if mode & executable:
                     exe = os.path.abspath(exe)
-                    exes.append({'exe': exe, 'uncompress': ' -f -k -d ', 'compress':  ' -f -k -', 'max_level': 9, 'ext': '.gz' })
+                    exes.append({'exe': exe, 'uncompress': force+' -k -d ', 'compress':  force+' -k -', 'max_level': 9, 'ext': '.gz' })
     exts = []
     for  i in range(len(exes)) :
         ext = exes[i]['ext']
