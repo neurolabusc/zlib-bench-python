@@ -16,6 +16,12 @@ b_speed_test.py
 
 The script `a_compile.py` downloads the [silesia corpus](http://sun.aei.polsl.pl/~sdeor/index.php?page=silesia) and compiles the versions of zlib to be tested. For Linux uses, it will compile zlib-ng and CloudFlare using both the gcc and clang compilers. This assumes you have both compilers installed and they are named `gcc` and `clang`. 
 
+If you compile on an Apple Silicon CPU (M1, M2), you may want to make sure the compiler created `arm64` executables not `x86_64` executables that must be run in translation. In my experience, if your run the `a_compile.py` using a x86_64 version of Python you will get `x86_64` executables. 
+
+```
+$file ./libdeflate 
+./libdeflate: Mach-O 64-bit executable arm64
+```
 
 The script `b_speed_test.py` allows us to compare speed of compression and decompression. Here is the output for the default Silesia corpus. 
 

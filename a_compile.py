@@ -72,12 +72,12 @@ def compile_libdeflate():
     cmd = 'git clone https://github.com/ebiggers/libdeflate.git '+gzdir
     subprocess.call(cmd, shell=True)
     os.chdir(gzdir)
-    cmd = 'make'
+    cmd = 'cmake -B build && cmake --build build'
     subprocess.call(cmd, shell=True)
     ext = ''
     if platform.system() == 'Windows':
         ext = '.exe'
-    gzexe = os.path.join(gzdir, 'gzip' + ext)
+    gzexe = os.path.join(gzdir, 'build','programs', 'libdeflate-gzip'+ ext)
     outnm = os.path.join(exedir, method + ext)
     print (gzexe + '->' + outnm)
     shutil.move(gzexe, outnm)
@@ -139,11 +139,12 @@ def cmake_zlib(title, repo, ccompiler):
         if (m >= len(ccompiler)):
             break
 
-def make_zlib(title, repo):
+def make_zlib(title, repo, ccompiler):
     """compile CloudFlare zlib executable
     
     title: name for executable, e.g. 'CloudFlare'
     repo: source of Github repository, e.g. "rordenlab/zlib.git"
+    ccompiler: ignored
     """
 
     basedir = os.getcwd()
@@ -183,6 +184,7 @@ if __name__ == '__main__':
     ccompiler = []
     if (platform.system() == 'Linux') and shutil.which('gcc') and shutil.which('clang'):
         ccompiler = ['gcc', 'clang']
+    cmake_zlib('zlibDJ', 'dougallj/zlib-dougallj.git', ccompiler)
     cmake_zlib('zlibCF', 'rordenlab/zlib.git', ccompiler)
     cmake_zlib('zlibNG', 'zlib-ng/zlib-ng.git', ccompiler) 
-    make_zlib('zlibMadler', 'neurolabusc/zlib')
+    make_zlib('zlibMadler', 'neurolabusc/zlib', ccompiler)
