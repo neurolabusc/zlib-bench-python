@@ -72,7 +72,10 @@ def compile_libdeflate():
     cmd = 'git clone https://github.com/ebiggers/libdeflate.git '+gzdir
     subprocess.call(cmd, shell=True)
     os.chdir(gzdir)
-    cmd = 'cmake -B build && cmake --build build'
+    tar = ""
+    if ((platform.system() == 'Darwin') and (subprocess.run(["sysctl", "-n", "sysctl.proc_translated"]))):
+            tar = " -DCMAKE_OSX_ARCHITECTURES='arm64' -DLLVM_TARGETS_TO_BUILD='AArch64'"
+    cmd = 'cmake '+tar+' -B build && cmake --build build'
     subprocess.call(cmd, shell=True)
     ext = ''
     if platform.system() == 'Windows':
@@ -125,7 +128,11 @@ def cmake_zlib(title, repo, ccompiler):
             rmtree(gzdir)
         os.mkdir(gzdir)
         os.chdir(gzdir)
-        cmd = 'cmake '+compiler+' -DBUILD_EXAMPLES=ON  -DZLIB_COMPAT=ON -DUSE_STATIC_RUNTIME=ON  ..'
+        tar = ""
+        if ((platform.system() == 'Darwin') and (subprocess.run(["sysctl", "-n", "sysctl.proc_translated"]))):
+            tar = " -DCMAKE_OSX_ARCHITECTURES='arm64' -DLLVM_TARGETS_TO_BUILD='AArch64'"
+        cmd = 'cmake '+compiler+tar+'  -DBUILD_EXAMPLES=ON  -DZLIB_COMPAT=ON -DUSE_STATIC_RUNTIME=ON  ..'
+        print('>>'+cmd)
         subprocess.call(cmd, shell=True)
         cmd = 'cmake --build .'
         subprocess.call(cmd, shell=True)
@@ -178,13 +185,14 @@ def make_zlib(title, repo, ccompiler):
 
 if __name__ == '__main__':
     """compile variants of zlib and sample compression corpus"""
-
     install_silesia_corpus()
-    compile_libdeflate()
+    #compile_libdeflate()
     ccompiler = []
     if (platform.system() == 'Linux') and shutil.which('gcc') and shutil.which('clang'):
         ccompiler = ['gcc', 'clang']
-    cmake_zlib('zlibDJ', 'dougallj/zlib-dougallj.git', ccompiler)
-    cmake_zlib('zlibCF', 'rordenlab/zlib.git', ccompiler)
-    cmake_zlib('zlibNG', 'zlib-ng/zlib-ng.git', ccompiler) 
-    make_zlib('zlibMadler', 'neurolabusc/zlib', ccompiler)
+    #cmake_zlib('zlibDJ', 'dougallj/zlib-dougallj.git', ccompiler)
+    #cmake_zlib('zlibCF', 'rordenlab/zlib.git', ccompiler)
+    #cmake_zlib('zlibNG', 'zlib-ng/zlib-ng.git', ccompiler)
+    #cmake_zlib('zlibNG', 'zlib-ng/zlib-ng.git', ccompiler)
+    cmake_zlib('zlibMadler', 'neurolabusc/zlib', ccompiler)
+    #make_zlib('zlibMadler', 'neurolabusc/zlib', ccompiler)

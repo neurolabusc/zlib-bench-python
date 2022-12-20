@@ -16,7 +16,7 @@ b_speed_test.py
 
 The script `a_compile.py` downloads the [silesia corpus](http://sun.aei.polsl.pl/~sdeor/index.php?page=silesia) and compiles the versions of zlib to be tested. For Linux uses, it will compile zlib-ng and CloudFlare using both the gcc and clang compilers. This assumes you have both compilers installed and they are named `gcc` and `clang`. 
 
-If you compile on an Apple Silicon CPU (M1, M2), you may want to make sure the compiler created `arm64` executables not `x86_64` executables that must be run in translation. In my experience, if your run the `a_compile.py` using a x86_64 version of Python you will get `x86_64` executables. 
+If you compile on an Apple Silicon CPU (M1, M2), you may want to make sure the compiler created `arm64` executables not `x86_64` executables that must be run in translation. In my experience, if your run the `a_compile.py` using a x86_64 version of Python you will get `x86_64` executables so you should use a native version of Python. To compile the [zlib-dougallj](https://github.com/dougallj/zlib-dougallj) for `arm64` you must have a hardware and compilers that supports the [udot instruction](https://dougallj.wordpress.com/) (e.g. clang 13 or later).
 
 ```
 $file ./libdeflate 
