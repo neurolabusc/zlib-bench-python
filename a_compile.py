@@ -186,13 +186,10 @@ def make_zlib(title, repo, ccompiler):
 if __name__ == '__main__':
     """compile variants of zlib and sample compression corpus"""
     install_silesia_corpus()
-    #compile_libdeflate()
+    compile_libdeflate()
     ccompiler = []
     if (platform.system() == 'Linux') and shutil.which('gcc') and shutil.which('clang'):
         ccompiler = ['gcc', 'clang']
-    #cmake_zlib('zlibDJ', 'dougallj/zlib-dougallj.git', ccompiler)
-    #cmake_zlib('zlibCF', 'rordenlab/zlib.git', ccompiler)
-    #cmake_zlib('zlibNG', 'zlib-ng/zlib-ng.git', ccompiler)
-    #cmake_zlib('zlibNG', 'zlib-ng/zlib-ng.git', ccompiler)
+    cmake_zlib('zlibCF', 'cloudflare/zlib.git', ccompiler)
+    cmake_zlib('zlibNG', 'zlib-ng/zlib-ng.git', ccompiler)
     cmake_zlib('zlibMadler', 'neurolabusc/zlib', ccompiler)
-    #make_zlib('zlibMadler', 'neurolabusc/zlib', ccompiler)
