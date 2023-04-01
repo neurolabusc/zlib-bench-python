@@ -357,7 +357,8 @@ if __name__ == '__main__':
     if not os.path.isdir(indir):
         print('Run a_compile.py first: Unable to find "' + indir +'"')
         sys.exit()
-    repeats = 5
+    #repeats: use multiple runs for more accurate timings, just once for validation
+    repeats = 3
     if len(sys.argv) > 2:
         repeats = int(sys.argv[2])
     results_file = ntpath.basename(indir)+'_speed_size.pkl'
@@ -365,12 +366,12 @@ if __name__ == '__main__':
         os.remove(results_file)
     exes = []
     #zstd max_level is 19, with highest levels VERY slow.  
-    exes.append({'exe': 'zstd', 'uncompress': ' -T0 -q -f -k -d ', 'compress': ' -T1 -q -f -k -', 'max_level': 19, 'ext': '.zst' })
+    #exes.append({'exe': 'zstd', 'uncompress': ' -T0 -q -f -k -d ', 'compress': ' -T1 -q -f -k -', 'max_level': 19, 'ext': '.zst' })
     #exes.append({'exe': 'pbzip2', 'uncompress': ' -q -f -k -d ', 'compress':  ' -q -f -k -', 'max_level': 9, 'ext': '.bz2' })
     #exes.append({'exe': 'lbzip2', 'uncompress': ' -q -f -k -d ', 'compress':  ' -q -f -k -', 'max_level': 9, 'ext': '.bz2' })
     #exes.append({'exe': 'lz4', 'uncompress': ' -q -f -k -d ', 'compress':  ' -q -f -k -', 'max_level': 9, 'ext': '.lz4' })
     #exes.append({'exe': 'xz', 'uncompress': ' -T0 -q -f -k -d ', 'compress':  ' -T0 -q -f -k -', 'max_level': 9, 'ext': '.xz' })
-    exes.append({'exe': 'gzip', 'uncompress': ' -q -f -k -d ', 'compress': ' -q -f -k -', 'max_level': 9, 'ext': '.gz' })
+    #exes.append({'exe': 'gzip', 'uncompress': ' -q -f -k -d ', 'compress': ' -q -f -k -', 'max_level': 9, 'ext': '.gz' })
     executable = stat.S_IEXEC | stat.S_IXGRP | stat.S_IXOTH
     exeDir = './exe'
     if not os.path.isdir(exeDir):
@@ -394,28 +395,32 @@ if __name__ == '__main__':
         ext = exes[i]['ext']
         if ext not in exts:
             exts.append(ext)
-    #warm up disk cache and CPU turbos
-    i = 0
-    test_cmp(
-        exes[i]['exe'],
-        indir,
-        1,
-        exes[i]['ext'],
-        exes[i]['compress'],
-        2,
-        exts,
-        True)
-    #test each compression
-    for  i in range(len(exes)) :
+    #test compression
+    isTestCompress = False; #skip as zlib-dougallj focuses on decompression
+    if (isTestCompress):
+        #warm up disk cache and CPU turbos
+        i = 0
         test_cmp(
             exes[i]['exe'],
             indir,
-            repeats,
+            1,
             exes[i]['ext'],
             exes[i]['compress'],
-            exes[i]['max_level'],
-            exts)
-    plot(results_file)
+            2,
+            exts,
+            True)
+        #test each compression
+        for  i in range(len(exes)) :
+            test_cmp(
+                exes[i]['exe'],
+                indir,
+                repeats,
+                exes[i]['ext'],
+                exes[i]['compress'],
+                exes[i]['max_level'],
+                exts)
+        plot(results_file)
+    #test decompression
     for  i in range(len(exts)) :
         ext = exts[i]
         exes2 = []
